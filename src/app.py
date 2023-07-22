@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, UserFavorites, Planet, People
 #from models import Person
 
 app = Flask(__name__)
@@ -44,6 +44,59 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@app.route('/users', methods=['GET'])
+def handle_users():
+    
+    users = User.query.all()
+    all_users = list(map(lambda x: x.serialize(), users))
+
+    return jsonify(all_users), 200
+
+@app.route('/user', methods=['POST'])
+def create_user():
+    
+    request_body_user = request.get_json()
+    new_user = User(username=request_body_user["username"], password=request_body_user["password"])
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(request_body_user), 200
+
+@app.route('/user/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    
+    request_body_user = request.get_json()
+    
+    user1 = User.query.get(user_id)
+    if user1 is None:
+        raise APIException('User not found', status_code=404)
+    
+    if "username" in request_body_user:
+        user1.username = request_body_user["username"]
+    if "password" in request_body_user:
+        user1.password = request_body_user["password"]
+    db.session.commit()
+    
+    return jsonify(request_body_user), 200
+
+@app.route('/user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    
+    user1 = User.query.get(user_id)
+    if user1 is None:
+        raise APIException('User not found', status_code=404)
+    db.session.delete(user1)
+    db.session.commit()
+    
+    return jsonify("OK"), 200
+
+@app.route('/users/favorites', methods=['GET'])
+def get_user_favorite():
+    # create_user = User.query.filter_by(id=user_id).first()
+    favorite_list = UserFavorites.query.all()
+    favorite_serialized = [item.serialize() for item in favorite_list]
+    return jsonify(favorite_serialized), 200
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
