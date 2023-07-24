@@ -49,11 +49,11 @@ class Planet(db.Model):
             "id": self.id,
             "name": self.name,
             "mass": self.mass,
-            # "diameter": self.diameter,
-            # "gravity": self.gravity,
-            # "orbital_period": self.orbital_period,
-            # "climate": self.climate,
-            # "terrain": self.terrain,
+            "diameter": self.diameter,
+            "gravity": self.gravity,
+            "orbital_period": self.orbital_period,
+            "climate": self.climate,
+            "terrain": self.terrain,
         }
 class People(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,11 +72,11 @@ class People(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            # "gender": self.gender,
-            # "height": self.height,
-            # "weight": self.weight,
-            # "age": self.age,
-            # "race": self.race,
-            # "hair_color": self.hair_color,
-            # "eye_color": self.eye_color,
+            "gender": self.gender,
+            "height": self.height,
+            "weight": self.weight,
+            "age": self.age,
+            "race": self.race,
+            "hair_color": self.hair_color,
+            "eye_color": self.eye_color,
         }
